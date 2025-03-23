@@ -188,9 +188,16 @@ object AuthUtils {
     }
 
     fun switchScreen(context: Context, screen: Screens) {
-        val intent = Intent(context, AuthActivity::class.java)
-        intent.putExtra("screen", screen.name)
-        context.startActivity(intent)
+        try {
+            val intent = Intent(context, AuthActivity::class.java)
+            intent.putExtra("screen", screen.name)
+            context.startActivity(intent)
+        }
+        catch (e: Exception){
+            Log.i("AuthUtils", "switchScreen: ${e.message}")
+
+        }
+
 //        (context as Activity).finish() // will think about this later sed.
     }
 
