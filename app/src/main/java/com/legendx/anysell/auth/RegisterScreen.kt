@@ -34,7 +34,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.legendx.anysell.utils.Appwrite
+import io.appwrite.exceptions.AppwriteException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 @Composable
@@ -73,13 +76,13 @@ fun RegisterScreen() {
                     color = Color.Black
                 )
             }
-            CustomTextField("Email", Icons.Default.Person){
+            CustomTextField("Email", Icons.Default.Person) {
                 registerViewModel.changeEmail(it)
             }
-            CustomTextField("Password", Icons.Default.Lock, isPassword = true){
+            CustomTextField("Password", Icons.Default.Lock, isPassword = true) {
                 registerViewModel.changePassword(it)
             }
-            CustomTextField("Confirm Password", Icons.Default.Lock, isPassword = true){
+            CustomTextField("Confirm Password", Icons.Default.Lock, isPassword = true) {
                 registerViewModel.changeConfirmPassword(it)
             }
             Text(
@@ -94,12 +97,41 @@ fun RegisterScreen() {
             Button(
                 onClick = {
                     if (AuthUtils.checkEmailAndPassword(emailText, passwordText).not()) {
-                        Toast.makeText(context,"Please enter valid email and password",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Please enter valid email and password",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     if (passwordText != confirmPasswordText) {
-                        Toast.makeText(context,"Password did not match ",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Password did not match ", Toast.LENGTH_SHORT)
+                            .show()
                     }
                     coroutineScope.launch {
+                        try{
+                            withContext(Dispatchers.IO) {
+                                Appwrite.registerAccount(emailText, passwordText)
+                            }
+                            withContext(Dispatchers.Main) {
+                                println("User Registered")
+                                AuthUtils.switchScreen(context, AuthUtils.Screens.HOME_SCREEN)
+                            }
+                        }catch (e: Exception){
+                            withContext(Dispatchers.Main) {
+                                when (e) {
+                                    is AppwriteException -> {
+                                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                                    }
+                                    is java.net.UnknownHostException -> {
+                                        Toast.makeText(context, "Network Error: Unable to connect to the server", Toast.LENGTH_LONG).show()
+                                    }
+                                    else -> {
+                                        Toast.makeText(context, "Registration failed: ${e.message}", Toast.LENGTH_LONG).show()
+                                        println("Error during registration: ${e.stackTraceToString()}")
+                                    }
+                                }
+                            }
+                        }
                         Appwrite.registerAccount(emailText, passwordText)
                     }.invokeOnCompletion {
                         println("User Registered")
@@ -118,7 +150,8 @@ fun RegisterScreen() {
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "- OR Continue with -", fontSize = 12.sp, color = Color.Gray)
             Spacer(Modifier.height(12.dp))
-            Text(text = "I have already an account",
+            Text(
+                text = "I have already an account",
                 modifier = Modifier.clickable {
                     AuthUtils.switchScreen(context, AuthUtils.Screens.LOGIN)
                 })
