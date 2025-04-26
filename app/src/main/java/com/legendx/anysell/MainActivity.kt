@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.legendx.anysell.auth.AuthActivity
 import com.legendx.anysell.auth.AuthUtils
 import com.legendx.anysell.ui.theme.AnySellTheme
+import com.legendx.anysell.utils.AppUtils
 import com.legendx.anysell.utils.Appwrite
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

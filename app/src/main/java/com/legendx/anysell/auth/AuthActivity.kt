@@ -16,14 +16,11 @@ class AuthActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AnySellTheme {
-                if (screenName == AuthUtils.Screens.REGISTER.name) {
-                    RegisterScreen()
-                } else if (screenName == AuthUtils.Screens.LOGIN.name) {
-                    LoginScreen()
-                } else if (screenName == AuthUtils.Screens.HOME_SCREEN.name) {
-                    HomeScreen()
-                } else {
-                    ForgotPasswordScreen()
+                when(screenName){
+                    AuthUtils.Screens.REGISTER.name -> RegisterScreen()
+                    AuthUtils.Screens.LOGIN.name -> LoginScreen()
+                    AuthUtils.Screens.FORGOT_PASSWORD.name -> ForgotPasswordScreen()
+                    AuthUtils.Screens.HOME_SCREEN.name -> HomeScreen()
                 }
             }
         }

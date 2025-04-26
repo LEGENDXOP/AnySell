@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("io.appwrite:sdk-for-android:6.1.0")
     implementation(libs.androidx.material3.extended)
