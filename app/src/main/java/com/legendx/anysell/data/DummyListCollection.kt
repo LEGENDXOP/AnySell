@@ -1,5 +1,12 @@
 package com.legendx.anysell.data
+import com.legendx.anysell.R
+val checkoutList = listOf(
+    checkoutCardsData(R.drawable.visa, cardNumber = 21354651354654),
+    checkoutCardsData(R.drawable.paypal, cardNumber = 21354651354654),
+    checkoutCardsData(R.drawable.logo, cardNumber = 21354651354654),
+    checkoutCardsData(R.drawable.apple_pay, cardNumber = 21354651354654)
 
+)
 val productList = listOf(
         ProductData(
             title = "Wireless Headphones",
